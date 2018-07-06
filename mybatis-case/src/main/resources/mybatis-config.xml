@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!-- mapper映射的二级缓存默认启用，需要mapper文件设置 -->
+        <setting name="cacheEnabled" value="true"/>
+        <!-- session级别的一级缓存默认开启 -->
+        <setting name="localCacheScope" value="SESSION"/>
+
+
+    </settings>
+
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <property name="helperDialect" value="mysql"/>
+            <property name="supportMethodsArguments" value="true"/>
+        </plugin>
+    </plugins>
+
+    <environments default="dev">
+
+        <!--以下为我们默认使用-->
+        <environment id="dev">
+            <transactionManager type="JDBC">
+            </transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/memo"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+
+        <!--提供多个数据库支持，下列暂时不用-->
+        <environment id="prod">
+            <transactionManager type="JDBC">
+            </transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/memo"/>
+                <property name="username" value="root"/>
+                <property name="password" value="root"/>
+            </dataSource>
+        </environment>
+
+    </environments>
+
+    <!--mapper的源路径-->
+    <mappers>
+        <mapper resource="mapper/MemoGroupMapper.xml"/>
+        <mapper resource="mapper/MemoInfoMapper.xml"/>
+    </mappers>
+
+</configuration>

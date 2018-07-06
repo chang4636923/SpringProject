@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.chang.mapper.MemoInfoMapper">
+
+    <resultMap id="memoInfoMap" type="com.chang.entity.MemoInfo">
+        <id property="id" column="id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="privacy" column="is_protected"/>
+        <result property="backGround" column="background"/>
+        <result property="remind" column="is_remind"/>
+        <result property="remindTime" column="remind_time" jdbcType="TIMESTAMP"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="basic_column">
+        id,
+        group_id,
+        title,
+        content,
+        is_protected,
+        background,
+        is_remind,
+        remind_time,
+        created_time,
+        modify_time
+    </sql>
+
+    <insert id="insertMemoInfo" parameterType="com.chang.entity.MemoInfo"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into memo_info(group_id, title, content, created_time)
+        values (#{groupId},#{title},#{content},#{createdTime})
+    </insert>
+
+    <update id="updateMemoInfo" parameterType="com.chang.entity.MemoInfo">
+        update memo_info
+        <set>
+            <if test="title!=null">
+                title = #{title},
+            </if>
+            <if test="content!=null">
+                content=#{content},
+            </if>
+            <if test="privacy!=null">
+                is_protected=#{privacy},
+            </if>
+        </set>
+        where id =#{id}
+    </update>
+
+    <update id="updateByMemoInfo">
+        update memo_info
+        <set>
+            <if test="title!=null">
+                title=#{title},
+            </if>
+            <if test="content!=null">
+                content=#{content},
+            </if>
+            <if test="privacy!=null">
+                is_protected=#{privacy},
+            </if>
+            <if test="backGround!=null">
+                background=#{backGround},
+            </if>
+            <if test="remind!=null">
+                is_remind=#{remind},
+            </if>
+            <if test="remindTime!=null">
+                remind_time=#{remindTime},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="deleteMemoInfo">
+        delete
+        from memo_info
+        where id = #{memoInfoId}
+    </delete>
+
+    <select id="queryByPage" resultMap="memoInfoMap">
+        select
+        <include refid="basic_column"/>
+        from memo_info
+        order by ${columnName}
+        limit #{pageSize} offset #{pageOffset}
+    </select>
+
+    <select id="queryMemoInfoById" resultMap="memoInfoMap">
+        select
+        <include refid="basic_column"/>
+        from memo_info
+        where id = #{id}
+    </select>
+
+    <select id="queryByGroupId" resultMap="memoInfoMap">
+        select
+        <include refid="basic_column"/>
+        from memo_info
+        where group_id=#{groupId}
+    </select>
+
+    <select id="queryByPageWithObject" resultMap="memoInfoMap">
+        select
+        <include refid="basic_column"/>
+        from memo_info
+        order by ${orderColumnName}
+        limit #{pageSize} offset #{pageOffset}
+    </select>
+
+    <select id="queryByTitleContentCreatedTime" resultMap="memoInfoMap">
+        select <include refid="basic_column"/>
+        from memo_info
+        <where>
+            <if test="title!=null">
+                and title like #{title}
+            </if>
+            <if test="content!=null">
+                and content like #{content}
+            </if>
+            <if test="createdTime!=null">
+                and created_time like #{createdTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryByPrivacyOrRemind" resultMap="memoInfoMap">
+        select <include refid="basic_column"/>
+        from memo_info
+        <where>
+            <choose>
+                <when test="privacy!=null">
+                    and is_protected=#{privacy}
+                </when>
+                <when test="remind!=null">
+                    and is_remind=#{remind}
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+        </where>
+
+    </select>
+
+    <select id="queryByIds" parameterType="list" resultMap="memoInfoMap">
+        select <include refid="basic_column"/>
+        from memo_info
+        where id in 
+        <foreach collection="list" open="(" separator="," close=")" index="index" item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryByPageTwo" resultMap="memoInfoMap">
+        select * from memo_info
+    </select>
+
+    <select id="queryByPage3" resultMap="memoInfoMap">
+        select * from memo_info
+    </select>
+
+    <!--ehcache第三方缓存-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+
+</mapper>

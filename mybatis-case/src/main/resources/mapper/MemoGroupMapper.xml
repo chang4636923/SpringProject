@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.chang.mapper.MemoGroupMapper">
+
+    <resultMap id="memoGroup" type="com.chang.entity.MemoGroup">
+        <id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+        <result property="name" column="name" javaType="string" jdbcType="VARCHAR"/>
+        <result property="createdTime" column="created_time" javaType="date" jdbcType="TIMESTAMP"/>
+        <result property="modifyTime" column="modify_time" javaType="date"
+                jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="basic_column">
+        id, name, created_time, modify_time
+    </sql>
+
+    <select id="queryAll" resultMap="memoGroup">
+        select
+        <include refid="basic_column"/>
+        from memo_group
+    </select>
+
+    <select id="query_memoGroup" resultMap="memoGroup">
+        select
+        <include refid="basic_column"/>
+        from memo_group
+    </select>
+
+    <insert id="insetMemoGroup" parameterType="com.chang.entity.MemoGroup">
+        insert into memo_group (name, created_time) values (#{name}, #{createdTime})
+    </insert>
+
+    <update id="updateMemoGroup">
+        update memo_group
+        set name = #{name}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMemoGroup">
+        delete from memo_group
+        where id = #{id}
+    </delete>
+
+</mapper>
