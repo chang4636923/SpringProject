@@ -1,0 +1,1 @@
+<jsp:forward page="/seckill/"></jsp:forward>
