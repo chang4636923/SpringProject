@@ -1,0 +1,31 @@
+spring:
+#  数据库配置
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    userName : root
+    password : 123456
+    url : jdbc:mysql://127.0.0.1/shop?characterEncoding=utf-8&useSSL=false
+  jpa:
+    show-sql : true
+    open-in-view: true
+  jackson:
+    default-property-inclusion: non_null
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+server:
+  servlet:
+    context-path: /sell
+  port: 8089
+
+wechat:
+  mpAppId: wx3a779199117347d7
+  mpAppSecret: 86cdc9724da99a619eb9a942ce80e6c3
+
+#后台服务内网穿透地址
+project-url:
+  wechatMpAuthorize: http://www.changyt.xyz:8089
+  #http://localhost:80
+  #http://eeyjzd.natappfree.cc
+

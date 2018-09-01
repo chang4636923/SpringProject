@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>卖家端管理系统</title>
+	<link href="http://cdn.bootcss.com/jqueryui/1.11.0/jquery-ui.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/default.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+	<div class='login'>
+	  <div class='login_title'>
+	    <span>卖家端用户登录</span>
+	  </div>
+	  <div class='login_fields'>
+	    <div class='login_fields__user'>
+	      <div class='icon'>
+	        <img src='img/user_icon_copy.png'>
+	      </div>
+	      <input placeholder='Username' type='text' id="username">
+	        <div class='validation'>
+	          <img src='img/tick.png'>
+	        </div>
+	      </input>
+	    </div>
+	    <div class='login_fields__password'>
+	      <div class='icon'>
+	        <img src='img/lock_icon_copy.png'>
+	      </div>
+	      <input placeholder='Password' type='password' id="password">
+	      <div class='validation'>
+	        <img src='img/tick.png'>
+	      </div>
+	    </div>
+	    <div class='login_fields__submit'>
+	      <input type='submit' value='登录'>
+	      <div class='forgot'>
+	        <a href='#'>忘记密码?</a>
+	      </div>
+	    </div>
+	  </div>
+	  <div class='success'>
+	    <h2>Authentication Success</h2>
+	    <p>Welcome back</p>
+	  </div>
+		<div class='failed'>
+			<h2>Authentication Fail</h2>
+			<p>Please Enter your info again</p>
+		</div>
+	  <div class='disclaimer'>
+	    <p>Today I will do what others won't, so tomorrow I can do what others can't.</p>
+	  </div>
+	</div>
+	<div class='authent'>
+	  <img src='img/puff.svg'>
+	  <p>Authenticating...</p>
+	</div>
+	<script src='js/stopExecutionOnTimeout.js?t=1'></script>
+	<script src="js/jquery-2.1.1.min.js"></script>
+	<script src="http://cdn.bootcss.com/jqueryui/1.11.0/jquery-ui.min.js"></script>
+	<script>
+	$('input[type="submit"]').click(function () {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        if (username != "" && password != "") {
+            // 载入动画
+            $('.login').addClass('test');
+            setTimeout(function () {
+                $('.login').addClass('testtwo');
+            }, 300);
+            setTimeout(function () {
+                $('.authent').show().animate({ right: -320 }, {
+                    easing: 'easeOutQuint',
+                    duration: 600,
+                    queue: false
+                });
+                $('.authent').animate({ opacity: 1 }, {
+                    duration: 200,
+                    queue: false
+                }).addClass('visible');
+            }, 500);
+            setTimeout(function () {
+                $('.authent').show().animate({ right: 90 }, {
+                    easing: 'easeOutQuint',
+                    duration: 600,
+                    queue: false
+                });
+                $('.authent').animate({ opacity: 0 }, {
+                    duration: 200,
+                    queue: false
+                }).addClass('visible');
+                $('.login').removeClass('testtwo');
+            }, 2500);
+            setTimeout(function () {
+                $('.login').removeClass('test');
+                $('.login div').fadeOut(123);
+                $.ajax({
+                    type: "get",
+                    url: "/sell/seller/login?username="+username+"&password="+password,
+                    datatype: "json",
+                    success: function (result) {
+                        console.log(result);
+                        var code = result;
+                        if (code == 200) {
+                            $('.success').fadeIn();
+                            setTimeout(function () {
+                                window.location.href = "/sell/seller/order/list";
+                            }, 1000);
+                        } else {
+                            $('.failed').fadeIn();
+                            setTimeout(function () {
+                                window.location.href = "/sell";
+                            }, 1000);
+                        }
+                    }
+                });
+            }, 2800);
+        }else {
+            alert("输入信息有误，请重新输入");
+            return;
+        }
+	});
+	$('input[type="text"],input[type="password"]').focus(function () {
+	    $(this).prev().animate({ 'opacity': '1' }, 200);
+	});
+	$('input[type="text"],input[type="password"]').blur(function () {
+	    $(this).prev().animate({ 'opacity': '.5' }, 200);
+	});
+	$('input[type="text"],input[type="password"]').keyup(function () {
+	    if (!$(this).val() == '') {
+	        $(this).next().animate({
+	            'opacity': '1',
+	            'right': '30'
+	        }, 200);
+	    } else {
+	        $(this).next().animate({
+	            'opacity': '0',
+	            'right': '20'
+	        }, 200);
+	    }
+	});
+	var open = 0;
+	$('.tab').click(function () {
+	    $(this).fadeOut(200, function () {
+	        $(this).parent().animate({ 'left': '0' });
+	    });
+	});
+	</script>
+</body>
+</html>
